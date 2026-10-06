@@ -10,13 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Entidad que representa a un usuario del sistema (ADMIN, VET o CLIENTE).
- */
 @Entity
 @Table(name = "usuarios", indexes = {
-    @Index(name = "idx_usuario_email", columnList = "email", unique = true),
-    @Index(name = "idx_usuario_rol", columnList = "rol")
+        @Index(name = "idx_usuario_email", columnList = "email", unique = true),
+        @Index(name = "idx_usuario_rol", columnList = "rol")
 })
 @Getter
 @Setter
@@ -52,9 +49,8 @@ public class Usuario implements UserDetails {
             return List.of();
         }
         return List.of(
-            new SimpleGrantedAuthority("ROLE_" + rol.name()),
-            new SimpleGrantedAuthority(rol.name())
-        );
+                new SimpleGrantedAuthority("ROLE_" + rol.name()),
+                new SimpleGrantedAuthority(rol.name()));
     }
 
     @Override
@@ -82,4 +78,3 @@ public class Usuario implements UserDetails {
         return true;
     }
 }
-
