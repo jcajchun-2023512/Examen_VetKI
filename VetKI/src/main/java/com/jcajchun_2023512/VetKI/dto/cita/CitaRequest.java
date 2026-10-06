@@ -1,0 +1,33 @@
+package com.jcajchun_2023512.VetKI.dto.cita;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class CitaRequest {
+
+    @NotNull(message = "El ID de la mascota es obligatorio")
+    private Long mascotaId;
+
+    @NotNull(message = "El ID del veterinario es obligatorio")
+    private Long veterinarioId;
+
+    @NotNull(message = "La fecha y hora de la cita es obligatoria")
+    @Future(message = "La fecha y hora de la cita debe ser posterior a la fecha y hora actual")
+    @JsonFormat(pattern = "yyyy-MM-dd['T'][ ]HH:mm[:ss]")
+    private LocalDateTime fechaHora;
+
+    @NotBlank(message = "El motivo de la cita es obligatorio")
+    @Size(max = 500, message = "El motivo no puede exceder 500 caracteres")
+    private String motivo;
+}
