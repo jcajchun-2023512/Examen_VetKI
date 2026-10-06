@@ -18,8 +18,19 @@ public interface CitaMedicaRepository extends JpaRepository<CitaMedica, Long> {
     // Regla 2: Disponibilidad de veterinario
     boolean existsByVeterinarioIdAndFechaHoraAndEstado(Long veterinarioId, LocalDateTime fechaHora, EstadoCita estado);
 
+    // Validación de traslape (intervalo de 30 minutos) excluyendo canceladas
+    boolean existsByVeterinarioIdAndEstadoNotAndFechaHoraAfterAndFechaHoraBefore(
+            Long veterinarioId,
+            EstadoCita estado,
+            LocalDateTime inicioSlot,
+            LocalDateTime finSlot
+    );
+
     // Regla 3: Límite diario de citas por cliente
     long countByMascotaClienteIdAndEstadoAndFechaHoraBetween(Long clienteId, EstadoCita estado, LocalDateTime inicio, LocalDateTime fin);
+
+    // Lista de citas para un cliente
+    List<CitaMedica> findByMascotaClienteIdOrderByFechaHoraDesc(Long clienteId);
 
     // Agenda para VET y ADMIN
     @Query("SELECT c FROM CitaMedica c " +
