@@ -1,0 +1,7 @@
+package com.jcajchun_2023512.VetKI.exception;
+
+public class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+}
