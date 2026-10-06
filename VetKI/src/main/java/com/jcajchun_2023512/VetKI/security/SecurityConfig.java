@@ -50,12 +50,14 @@ public class SecurityConfig {
                 // Rutas públicas de autenticación
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 // Reglas según la matriz de endpoints
-                .requestMatchers(HttpMethod.GET, "/api/v1/mascotas/{id}").hasAnyRole("VET", "ADMIN")
                 .requestMatchers("/api/v1/mascotas/mis-mascotas").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.GET, "/api/v1/mascotas/{id}").hasAnyRole("VET", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/v1/mascotas").hasAnyRole("CLIENTE", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/v1/citas").hasAnyRole("CLIENTE", "ADMIN")
                 .requestMatchers("/api/v1/citas/agenda").hasAnyRole("VET", "ADMIN")
+                .requestMatchers("/api/v1/citas/mis-citas").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.POST, "/api/v1/citas").hasAnyRole("CLIENTE", "ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/citas/{id}/cancelar").hasAnyRole("CLIENTE", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/citas/{id}").hasAnyRole("CLIENTE", "VET", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/v1/expedientes").hasAnyRole("VET", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/v1/expedientes/mascota/**").hasAnyRole("VET", "CLIENTE", "ADMIN")
                 .anyRequest().authenticated()
