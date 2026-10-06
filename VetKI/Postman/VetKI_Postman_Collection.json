@@ -1,0 +1,234 @@
+﻿{
+  "info": {
+    "name": "VetKI API",
+    "_postman_id": "vetki-2023512-collection",
+    "description": "Colección completa de la API REST VetKI - Sistema de Clínica Veterinaria.\n\n**Flujo recomendado:**\n1. Ejecuta cualquier Login → el token se guarda automáticamente en `{{token}}`\n2. El resto de requests lo usan automáticamente vía Bearer Token\n\n**Usuarios seed (Fase 5):**\n- ADMIN: admin@vetki.com / Admin1234!\n- VET:   vet@vetki.com   / Vet1234!\n- CLIENTE: cliente@vetki.com / Cliente1234!",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8081", "type": "string" },
+    { "key": "token",   "value": "",                       "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Login ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    console.log('Token guardado:', json.token.substring(0,30) + '...');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@vetki.com\",\n  \"password\": \"Admin1234!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api","v1","auth","login"] }
+          }
+        },
+        {
+          "name": "Login VET",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) { pm.collectionVariables.set('token', json.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"vet@vetki.com\",\n  \"password\": \"Vet1234!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api","v1","auth","login"] }
+          }
+        },
+        {
+          "name": "Login CLIENTE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) { pm.collectionVariables.set('token', json.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"cliente@vetki.com\",\n  \"password\": \"Cliente1234!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api","v1","auth","login"] }
+          }
+        },
+        {
+          "name": "Register (nuevo usuario)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nuevo Cliente\",\n  \"telefono\": \"50299887766\",\n  \"email\": \"nuevo@vetki.com\",\n  \"password\": \"Nuevo1234!\",\n  \"rol\": \"CLIENTE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/register", "host": ["{{baseUrl}}"], "path": ["api","v1","auth","register"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🐾 Mascotas",
+      "item": [
+        {
+          "name": "Registrar Mascota [CLIENTE/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Bobby\",\n  \"especie\": \"PERRO\",\n  \"raza\": \"Labrador\",\n  \"edad\": 3\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/mascotas", "host": ["{{baseUrl}}"], "path": ["api","v1","mascotas"] }
+          }
+        },
+        {
+          "name": "Mis Mascotas [CLIENTE]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/mascotas/mis-mascotas", "host": ["{{baseUrl}}"], "path": ["api","v1","mascotas","mis-mascotas"] }
+          }
+        },
+        {
+          "name": "Ver Mascota por ID [VET/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/mascotas/1", "host": ["{{baseUrl}}"], "path": ["api","v1","mascotas","1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📅 Citas Médicas",
+      "item": [
+        {
+          "name": "Agendar Cita [CLIENTE/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mascotaId\": 1,\n  \"veterinarioId\": 2,\n  \"fechaHora\": \"2026-10-15T10:00:00\",\n  \"motivo\": \"Vacunación anual\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/citas", "host": ["{{baseUrl}}"], "path": ["api","v1","citas"] }
+          }
+        },
+        {
+          "name": "Mis Citas [CLIENTE]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/citas/mis-citas", "host": ["{{baseUrl}}"], "path": ["api","v1","citas","mis-citas"] }
+          }
+        },
+        {
+          "name": "Agenda (filtro opcional) [VET/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/citas/agenda?vetId=2&fecha=2026-10-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","v1","citas","agenda"],
+              "query": [
+                { "key": "vetId", "value": "2", "description": "ID del veterinario (opcional)" },
+                { "key": "fecha", "value": "2026-10-15", "description": "Fecha exacta yyyy-MM-dd (opcional)" },
+                { "key": "desde", "value": "", "description": "Desde datetime ISO (opcional)", "disabled": true },
+                { "key": "hasta", "value": "", "description": "Hasta datetime ISO (opcional)", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ver Cita por ID [TODOS]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/citas/1", "host": ["{{baseUrl}}"], "path": ["api","v1","citas","1"] }
+          }
+        },
+        {
+          "name": "Cancelar Cita [CLIENTE/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/citas/1/cancelar", "host": ["{{baseUrl}}"], "path": ["api","v1","citas","1","cancelar"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Expedientes Clínicos",
+      "item": [
+        {
+          "name": "Registrar Expediente [VET/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"citaId\": 1,\n  \"diagnostico\": \"Infección bacteriana leve\",\n  \"tratamiento\": \"Amoxicilina 250mg - 7 días\",\n  \"pesoKg\": 8.75\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/expedientes", "host": ["{{baseUrl}}"], "path": ["api","v1","expedientes"] }
+          }
+        },
+        {
+          "name": "Historial de Mascota [VET/CLIENTE/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/expedientes/mascota/1", "host": ["{{baseUrl}}"], "path": ["api","v1","expedientes","mascota","1"] }
+          }
+        },
+        {
+          "name": "Ver Expediente por ID [VET/CLIENTE/ADMIN]",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/expedientes/1", "host": ["{{baseUrl}}"], "path": ["api","v1","expedientes","1"] }
+          }
+        }
+      ]
+    }
+  ]
+}
