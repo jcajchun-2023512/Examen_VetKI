@@ -6,7 +6,7 @@ API REST robusta, segura y escalable desarrollada con **Spring Boot 3**, **Sprin
 
 ## 📋 Información del Proyecto
 
-* **Desarrollador / Alumno:** Juan Carlos Cajchún
+* **Desarrollador / Alumno:** Javier Adrían Cajchún Zúñiga
 * **Carné:** 2023512
 * **Paquete Base:** `com.jcajchun_2023512.VetKI`
 * **Puerto Predeterminado:** `8081`
@@ -119,7 +119,7 @@ Todas las rutas (excepto `/api/v1/auth/**`) requieren la cabecera:
 
 ---
 
-## 📖 Catálogo de Peticiones (Postman / cURL)
+## 📖 Catálogo de Peticiones 
 
 ### 1. Autenticación (`/api/v1/auth`)
 
